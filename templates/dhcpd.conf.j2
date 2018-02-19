@@ -1,0 +1,27 @@
+
+ddns-update-style interim;
+
+allow booting;
+allow bootp;
+
+ignore client-updates;
+set vendorclass = option vendor-class-identifier;
+option pxe-system-type code 93 = unsigned integer 16;
+
+subnet {{ cobbler_network }} netmask {{ cobbler_netmask }} {
+     option routers             {{ cobbler_gateway }};
+     option domain-name-servers {{ cobbler_nameservers }};
+     option subnet-mask         {{ cobbler_netmask }};
+     range dynamic-bootp        {{ cobbler_boot_range }};
+     default-lease-time         21600;
+     max-lease-time             43200;
+     next-server                $next_server;
+     class "pxeclients" {
+          match if substring (option vendor-class-identifier, 0, 9) = "PXEClient";
+          if option pxe-system-type != 00:00 {
+                  filename "ipxe.efi";
+          } else {
+                  filename "undionly.kpxe";
+          }
+     }
+}

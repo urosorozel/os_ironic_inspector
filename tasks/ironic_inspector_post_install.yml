@@ -1,0 +1,44 @@
+- name: Generate ironic inspector config
+  config_template:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    owner: "{{ item.owner|default(ironic_inspector_system_user_name) }}"
+    group: "{{ item.group|default(ironic_inspector_system_group_name) }}"
+    mode: "0644"
+    config_overrides: "{{ item.config_overrides }}"
+    config_type: "{{ item.config_type }}"
+  with_items:
+    - src: "ironic-inspector.conf.j2"
+      dest: "/etc/ironic/ironic-inspector.conf"
+      config_overrides: "{{ ironic_inspector_conf_overrides }}"
+      config_type: "ini"
+    - src: "rootwrap.conf.j2"
+      dest: "/etc/ironic-inspector/rootwrap.conf"
+      owner: "root"
+      group: "root"
+      config_overrides: "{{ ironic_inspector_rootwrap_conf_overrides }}"
+      config_type: "ini"
+    - src: "policy.json.j2"
+      dest: "/etc/ironic-inspector/policy.json"
+      config_overrides: "{{ ironic_inspector_policy_overrides }}"
+      config_type: "json"
+  notify: Restart ironic inspector services
+
+- name: Copy rootwrap filters
+  copy:
+    src: "{{ item }}"
+    dest: "/etc/ironic-inspector/rootwrap.d/"
+    owner: "root"
+    group: "root"
+  with_fileglob:
+    - rootwrap.d/*
+  notify: Restart ironic inspector services
+
+- name: Include sudoers file
+  template:
+    src: "sudoers.j2"
+    dest: "/etc/sudoers.d/{{ ironic_inspector_system_user_name }}_sudoers"
+    mode: "0440"
+    owner: "root"
+    group: "root"
+
