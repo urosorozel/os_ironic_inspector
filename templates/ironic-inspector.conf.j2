@@ -41,8 +41,9 @@ region_name = {{ keystone_service_region }}
 [processing]
 add_ports = {{ ironic_inspector_port_addition | default('pxe') }}
 keep_ports = {{ ironic_inspector_keep_ports | default('present') }}
-#ramdisk_logs_dir = {{ ironic_inspector_data_dir }}/log
-#always_store_ramdisk_logs = {{ ironic_inspector_store_ramdisk_logs | default('true') | bool }}
+store_data = {{ ironic_inspector_swift_store_data }} 
+ramdisk_logs_dir = {{ ironic_inspector_data_dir }}/log
+always_store_ramdisk_logs = {{ ironic_inspector_store_ramdisk_logs | default('true') | bool }}
 {% if ironic_inspector_processing_hooks is defined %}
 processing_hooks = {{ ironic_inspector_processing_hooks }}
 {% endif %}
@@ -55,3 +56,15 @@ enroll_node_driver = {{ ironic_inspector_default_node_driver }}
 
 [pxe_filter]
 driver = {{ ironic_inspector_pxe_filter }}
+
+[swift]
+username = {{ ironic_inspector_swift_username }}
+password = {{ ironic_inspector_swift_password }}
+project_name = {{ ironic_inspector_service_project_name }}
+user_domain_name = {{ ironic_inspector_service_domain_id | default("Default") }}
+project_domain_name = {{ ironic_inspector_service_domain_id | default("Default") }}
+auth_url = {{ keystone_service_adminurl }}
+insecure = {{ keystone_service_adminuri_insecure | bool }}
+auth_type = {{ ironic_inspector_keystone_auth_plugin }}
+valid_interfaces = {{ ironic_inspector_valid_interfaces }}
+container = {{ ironic_inspector_swift_container }} 

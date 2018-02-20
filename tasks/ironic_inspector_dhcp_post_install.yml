@@ -13,28 +13,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-- name: Restart ironic inspector services
-  service:
-    name: "{{ item.service_name }}"
-    state: restarted
-    enabled: yes
-    daemon_reload: yes
-  with_list: "{{ filtered_ironic_inspector_services }}"
-
-- name: Restart tftpd-hpa
-  service:
-    name: "tftpd-hpa"
-    state: restarted
-  failed_when: false
-
-- name: Restart isc-dhcp-server
-  service:
-    name: "isc-dhcp-server"
-    state: restarted
-  failed_when: false
-
-- name: Restart nginx
-  service:
-    name: "nginx"
-    state: restarted
-  failed_when: false
+- name: Copy in dhcpd config file
+  template:
+    src: "dhcpd.conf.j2"
+    dest: "/etc/dhcp/dhcpd.conf"
+  notify:
+    - Restart isc-dhcp-server

@@ -1,0 +1,42 @@
+---
+# Copyright 2015, Rackspace US, Inc.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- name: Lookup ipa sha256 checksum
+  set_fact:
+    ironic_inspector_ipa_kernel_sha256: "{{ lookup('url',ironic_inspector_ipa_kernel_sha256_url)}}"
+    ironic_inspector_ipa_initrd_sha256: "{{ lookup('url',ironic_inspector_ipa_initrd_sha256_url)}}"
+
+- name: Set httpboot download path
+  set_fact:
+    ironic_inspector_ipa_download_path: "{{ ironic_inspector_ipa_httpboot_image_dir }}"
+  when: ironic_inspector_pxe_boot_mode == "ipxe"
+
+- name: Set tftpboot download path
+  set_fact:
+    ironic_inspector_ipa_download_path: "{{ ironic_inspector_ipa_tftpboot_image_dir }}"
+  when: ironic_inspector_pxe_boot_mode == "pxelinux"
+
+- name: Download ipa kernel image
+  get_url:
+    url: "{{ ironic_inspector_ipa_kernel_url }}"
+    dest: "{{ ironic_inspector_ipa_download_path }}/{{ ironic_inspector_ipa_kernel_url | basename }}"
+    checksum: "sha256:{{ironic_inspector_ipa_kernel_sha256.split(' ')[0]}}"
+
+- name: Download ipa initrd image
+  get_url:
+    url: "{{ ironic_inspector_ipa_initrd_url }}"
+    dest: "{{ ironic_inspector_ipa_download_path }}/{{ ironic_inspector_ipa_initrd_url | basename }}"
+    checksum: "sha256:{{ironic_inspector_ipa_initrd_sha256.split(' ')[0]}}"
+

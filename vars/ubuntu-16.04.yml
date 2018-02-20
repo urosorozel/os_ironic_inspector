@@ -28,6 +28,9 @@ ironic_inspector_distro_packages:
   - libpq-dev
   - python-yaml
   - tftpd-hpa
+  - ipmitool
+  - tftpd-hpa
+  - isc-dhcp-server
 
 ironic_inspector_standalone_distro_packages:
   - isc-dhcp-server

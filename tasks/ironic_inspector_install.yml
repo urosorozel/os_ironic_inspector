@@ -67,7 +67,7 @@
     state: absent
   when: ironic_inspector_get_venv | changed
 
-- name: Create ironic venv dir
+- name: Create ironic inspector venv dir
   file:
     path: "{{ ironic_inspector_bin | dirname }}"
     state: directory

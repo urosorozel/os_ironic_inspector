@@ -1,4 +1,4 @@
-user {{ ironic_inspector_nginx_service_username }};
+user {{ ironic_inspector_system_user_name }};
 worker_processes 2;
 pid /run/nginx.pid;
 
@@ -42,9 +42,9 @@ http {
 	server {
 		listen {{ ironic_inspector_file_url_port }};
 		server_name {{ ansible_hostname }};
-		root {{ http_boot_folder }};
-		location {{ ironic_inspector_http_boot_folder }}/ {
-			alias {{ ironic_inspector_http_boot_folder }}/;
+		root {{ ironic_inspector_ipa_httpboot_image_dir }};
+		location {{ ironic_inspector_ipa_httpboot_image_dir }}/ {
+			alias {{ ironic_inspector_ipa_httpboot_image_dir }}/;
 		}
 	}
 }

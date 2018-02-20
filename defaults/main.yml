@@ -35,7 +35,7 @@ ironic_inspector_developer_constraints:
 
 # Name of the virtual env to deploy into
 ironic_inspector_venv_tag: untagged
-ironic_inspector_bin: "/openstack/venvs/ironic-{{ ironic_inspector_venv_tag }}/bin"
+ironic_inspector_bin: "/openstack/venvs/ironic-inspector-{{ ironic_inspector_venv_tag }}/bin"
 
 # System info
 ironic_inspector_system_user_name: ironic-inspector
@@ -53,7 +53,7 @@ ironic_inspector_services:
     group: ironic_inspector
     service_name: ironic-inspector
     init_config_overrides: "{{ ironic_inspector_init_config_overrides }}"
-    program_override: "{{ ironic_inspector_bin }}/ironic-inspector --config-file /etc/ironic/ironic-inspector.conf"
+    program_override: "{{ ironic_inspector_bin }}/ironic-inspector --config-file /etc/ironic-inspector/ironic-inspector.conf"
 
 ironic_inspector_service_name: ironic-inspector
 ironic_inspector_service_type: baremetal-introspection
@@ -133,9 +133,12 @@ ironic_inspector_service_user_name: "ironic_inspector"
 
 ### OpenStack Services to integrate with
 # Ironic swift store information
-ironic_inspector_swift_container: ironic_inspector
+ironic_inspector_swift_container: ironic-inspector
 ironic_inspector_swift_api_version: v1
-ironic_inspector_swift_url_endpoint_type: swift
+ironic_inspector_swift_url_endpoint_type: object-store
+ironic_inspector_swift_username: swift-inspector
+ironic_inspector_swift_password: swift-inspector-password
+ironic_inspector_swift_store_data: swift
 # The ironic inspector swift auth account and swift endpoints will be generated using the
 #  known swift data as provided by swift stat. If you wish to set either of these
 #  items to something else define these variables.
@@ -156,17 +159,28 @@ ironic_inspector_default_node_driver: agent_ipmitool
 ironic_inspector_node_not_found_hook: enroll
 ironic_inspector_pxe_filter: iptables
 # Ironic inspector dnsmaq
-ironic_inspector_dhcp_pool_start: 10.30.40.20 
-ironic_inspector_dhcp_pool_end: 10.30.40.30
-ironic_inspector_dhcp_static_mask: 255.255.255.0
-ironic_inspector_dhcp_lease_time: 12h
+ironic_inspector_dhcp_pool_range: 10.30.40.20 10.30.40.30
+ironic_inspector_dhcp_subnet: 10.30.40.0
+ironic_inspector_dhcp_subnet_mask: 255.255.255.0
+ironic_inspector_dhcp_gateway: 10.30.40.1
+ironic_inspector_dhcp_nameservers: 10.30.40.1
+ironic_inspector_dhcp_lease_time: 600
 # Ironic inspector nginx
-ironic_inspector_nginx_service_username: nginx
 ironic_inspector_nginx_log_dir: /var/log/nginx
 ironic_inspector_file_url_port: 8080
-ironic_inspector_http_boot_folder: /http_boot
 
+ironic_inspector_boot_mode: ipxe
+ironic_inspector_pxe_boot_mode: "{{ ironic_inspector_boot_mode | default('pxelinux') }}"
+ironic_inspector_ipa_httpboot_image_dir: /httpboot
+ironic_inspector_ipa_tftpboot_image_dir: /tftpboot
+ironic_inspector_ipa_kernel_url: https://tarballs.openstack.org/ironic-python-agent/tinyipa/files/tinyipa-stable-pike.vmlinuz
+ironic_inspector_ipa_kernel_sha256_url: https://tarballs.openstack.org/ironic-python-agent/tinyipa/files/tinyipa-stable-pike.vmlinuz.sha256
+ironic_inspector_ipa_initrd_url: https://tarballs.openstack.org/ironic-python-agent/tinyipa/files/tinyipa-stable-pike.gz
+ironic_inspector_ipa_initrd_sha256_url: https://tarballs.openstack.org/ironic-python-agent/tinyipa/files/tinyipa-stable-pike.gz.sha256
 
+ironic_inspector_ipa_kernel_suffix_url: "{{ironic_inspector_file_url_port}}{{ironic_inspector_ipa_httpboot_image_dir}}/{{ironic_inspector_ipa_kernel_url|basename}}"
+ironic_inspector_ipa_initrd_suffix_url: "{{ironic_inspector_file_url_port}}{{ironic_inspector_ipa_httpboot_image_dir}}/{{ironic_inspector_ipa_initrd_url|basename}}"
+ironic_inspector_ipxe_suffix_url: "{{ironic_inspector_file_url_port}}{{ironic_inspector_ipa_httpboot_image_dir}}/ironic-inspector-ipxe"
 # This variable is used by the repo_build process to determine
 # which host group to check for members of before building the
 # pip packages required by this role. The value is picked up

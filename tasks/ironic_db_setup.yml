@@ -13,28 +13,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-- name: Restart ironic inspector services
-  service:
-    name: "{{ item.service_name }}"
-    state: restarted
-    enabled: yes
-    daemon_reload: yes
-  with_list: "{{ filtered_ironic_inspector_services }}"
-
-- name: Restart tftpd-hpa
-  service:
-    name: "tftpd-hpa"
-    state: restarted
-  failed_when: false
-
-- name: Restart isc-dhcp-server
-  service:
-    name: "isc-dhcp-server"
-    state: restarted
-  failed_when: false
-
-- name: Restart nginx
-  service:
-    name: "nginx"
-    state: restarted
-  failed_when: false
+- name: Update database schema
+  command: "{{ ironic_inspector_bin }}/ironic-dbsync upgrade"
+  become: yes
+  become_user: "{{ ironic_inspector_system_user_name }}"
+  changed_when: false
+  notify:
+    - Restart ironic services

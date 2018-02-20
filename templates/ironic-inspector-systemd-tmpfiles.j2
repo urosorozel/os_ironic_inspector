@@ -1,0 +1,5 @@
+# {{ ansible_managed }}
+
+D /var/lock/{{ item.service_name }} 2755 {{ ironic_inspector_system_user_name }} {{ ironic_inspector_system_group_name }}
+D /var/run/{{ item.service_name }} 2755 {{ ironic_inspector_system_user_name }} {{ ironic_inspector_system_group_name }}
+D {{ ironic_inspector_lock_path }} 2755 {{ ironic_inspector_system_user_name }} {{ ironic_inspector_system_group_name }}

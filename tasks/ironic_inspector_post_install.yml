@@ -1,3 +1,14 @@
+- name: Create ironic store directories
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: "{{ ironic_inspector_system_user_name }}"
+    group: "{{ ironic_inspector_system_group_name }}"
+    mode: "0755"
+  with_items:
+    - /ironic
+    - /ironic/log
+
 - name: Generate ironic inspector config
   config_template:
     src: "{{ item.src }}"
@@ -9,7 +20,7 @@
     config_type: "{{ item.config_type }}"
   with_items:
     - src: "ironic-inspector.conf.j2"
-      dest: "/etc/ironic/ironic-inspector.conf"
+      dest: "/etc/ironic-inspector/ironic-inspector.conf"
       config_overrides: "{{ ironic_inspector_conf_overrides }}"
       config_type: "ini"
     - src: "rootwrap.conf.j2"

@@ -3,5 +3,4 @@
 Defaults:{{ ironic_inspector_system_user_name }} !requiretty
 Defaults:{{ ironic_inspector_system_user_name }} secure_path="{{ ironic_inspector_bin }}:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
 
-{{ ironic_inspector_system_user_name }} ALL = (root) NOPASSWD: {{ ironic_inspector_bin }}/{{ ironic_service_name }}-rootwrap
 {{ ironic_inspector_system_user_name }} ALL = (root) NOPASSWD: {{ ironic_inspector_bin }}/{{ ironic_service_name }}-inspector-rootwrap

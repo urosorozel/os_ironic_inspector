@@ -13,28 +13,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-- name: Restart ironic inspector services
-  service:
-    name: "{{ item.service_name }}"
-    state: restarted
-    enabled: yes
-    daemon_reload: yes
-  with_list: "{{ filtered_ironic_inspector_services }}"
+- name: Copy nginx config file
+  template:
+    src: "nginx.conf.j2"
+    dest: "/etc/nginx/nginx.conf"
+  notify:
+    - Restart nginx
 
-- name: Restart tftpd-hpa
-  service:
-    name: "tftpd-hpa"
-    state: restarted
-  failed_when: false
+- name: Output default ipxe config
+  template:
+    src: "ironic-inspector-ipxe.j2"
+    dest: "{{ ironic_inspector_ipa_httpboot_image_dir }}/ironic-inspector-ipxe"
 
-- name: Restart isc-dhcp-server
-  service:
-    name: "isc-dhcp-server"
-    state: restarted
-  failed_when: false
-
-- name: Restart nginx
-  service:
-    name: "nginx"
-    state: restarted
-  failed_when: false
