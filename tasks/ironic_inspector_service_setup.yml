@@ -89,3 +89,62 @@
   until: add_service|success
   retries: 5
   delay: 10
+
+# Create ironic inspector swift project
+- name: Ensure ironic inspector swift project
+  keystone:
+    command: "ensure_project"
+    login_user: "{{ keystone_admin_user_name }}"
+    login_password: "{{ keystone_auth_admin_password }}"
+    login_project_name: "{{ keystone_admin_tenant_name }}"
+    endpoint: "{{ keystone_service_adminurl }}"
+    project_name: "{{ ironic_inspector_swift_project_name }}"
+    insecure: "{{ keystone_service_adminuri_insecure }}"
+  register: add_project
+  when: 
+    - not ironic_inspector_service_in_ldap | bool
+    - ironic_inspector_swift_store_data == "swift"
+  until: add_project|success
+  retries: 5
+  delay: 10
+
+# Create an ironic inspector swift store user
+- name: Ensure swift ironic inspector user
+  keystone:
+    command: "ensure_user"
+    login_user: "{{ keystone_admin_user_name }}"
+    login_password: "{{ keystone_auth_admin_password }}"
+    login_project_name: "{{ keystone_admin_tenant_name }}"
+    endpoint: "{{ keystone_service_adminurl }}"
+    user_name: "{{ ironic_inspector_swift_username }}"
+    project_name: "{{ ironic_inspector_service_project_name }}"
+    password: "{{ ironic_inspector_swift_password }}"
+    insecure: "{{ keystone_service_adminuri_insecure }}"
+  register: add_user
+  when: 
+    - not ironic_inspector_service_in_ldap | bool
+    - ironic_inspector_swift_store_data == "swift"
+  until: add_user|success
+  retries: 5
+  delay: 10
+
+# Add a role to the user
+- name: Ensure ironic inspector swift user to _member_ and swiftoperator role
+  keystone:
+    command: "ensure_user_role"
+    login_user: "{{ keystone_admin_user_name }}"
+    login_password: "{{ keystone_auth_admin_password }}"
+    login_project_name: "{{ keystone_admin_tenant_name }}"
+    endpoint: "{{ keystone_service_adminurl }}"
+    user_name: "{{ ironic_inspector_swift_username }}"
+    project_name: "{{ ironic_inspector_swift_project_name }}"
+    role_name: "{{ item }}"
+    insecure: "{{ keystone_service_adminuri_insecure }}"
+  register: add_role
+  when: 
+    - not ironic_inspector_service_in_ldap | bool
+    - ironic_inspector_swift_store_data == "swift"
+  until: add_role|success
+  retries: 5
+  delay: 10
+  with_items: "{{ ironic_inspector_swift_role_names }}"

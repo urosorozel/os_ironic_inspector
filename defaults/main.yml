@@ -138,6 +138,10 @@ ironic_inspector_swift_api_version: v1
 ironic_inspector_swift_url_endpoint_type: object-store
 ironic_inspector_swift_username: swift-inspector
 ironic_inspector_swift_password: swift-inspector-password
+ironic_inspector_swift_project_name: ironic-inspector
+ironic_inspector_swift_role_names:
+  - _member_
+  - swiftoperator
 ironic_inspector_swift_store_data: swift
 # The ironic inspector swift auth account and swift endpoints will be generated using the
 #  known swift data as provided by swift stat. If you wish to set either of these
@@ -158,7 +162,8 @@ ironic_inspector_default_node_driver: agent_ipmitool
 #ironic_inspector_processing_hooks: ramdisk_error,root_disk_selection,scheduler,validate_interfaces,capabilities,pci_devices
 ironic_inspector_node_not_found_hook: enroll
 ironic_inspector_pxe_filter: iptables
-# Ironic inspector dnsmaq
+ironic_inspector_report_path: report_path
+# Ironic inspector dhcp
 ironic_inspector_dhcp_pool_range: 10.30.40.20 10.30.40.30
 ironic_inspector_dhcp_subnet: 10.30.40.0
 ironic_inspector_dhcp_subnet_mask: 255.255.255.0
@@ -169,18 +174,19 @@ ironic_inspector_dhcp_lease_time: 600
 ironic_inspector_nginx_log_dir: /var/log/nginx
 ironic_inspector_file_url_port: 8080
 
-ironic_inspector_boot_mode: ipxe
-ironic_inspector_pxe_boot_mode: "{{ ironic_inspector_boot_mode | default('pxelinux') }}"
+ironic_inspector_boot_mode: http # tftp
+ironic_inspector_pxe_boot_mode: "{{ ironic_inspector_boot_mode | default('http') }}"
 ironic_inspector_ipa_httpboot_image_dir: /httpboot
 ironic_inspector_ipa_tftpboot_image_dir: /tftpboot
 ironic_inspector_ipa_kernel_url: https://tarballs.openstack.org/ironic-python-agent/tinyipa/files/tinyipa-stable-pike.vmlinuz
+ironic_inspector_ipa_kernel_name: ipa_kernel
 ironic_inspector_ipa_kernel_sha256_url: https://tarballs.openstack.org/ironic-python-agent/tinyipa/files/tinyipa-stable-pike.vmlinuz.sha256
 ironic_inspector_ipa_initrd_url: https://tarballs.openstack.org/ironic-python-agent/tinyipa/files/tinyipa-stable-pike.gz
+ironic_inspector_ipa_initrd_name: ipa_ramdisk
 ironic_inspector_ipa_initrd_sha256_url: https://tarballs.openstack.org/ironic-python-agent/tinyipa/files/tinyipa-stable-pike.gz.sha256
 
-ironic_inspector_ipa_kernel_suffix_url: "{{ironic_inspector_file_url_port}}{{ironic_inspector_ipa_httpboot_image_dir}}/{{ironic_inspector_ipa_kernel_url|basename}}"
-ironic_inspector_ipa_initrd_suffix_url: "{{ironic_inspector_file_url_port}}{{ironic_inspector_ipa_httpboot_image_dir}}/{{ironic_inspector_ipa_initrd_url|basename}}"
-ironic_inspector_ipxe_suffix_url: "{{ironic_inspector_file_url_port}}{{ironic_inspector_ipa_httpboot_image_dir}}/ironic-inspector-ipxe"
+ironic_inspector_ipa_kernel_suffix_url: "{{ ironic_inspector_file_url_port}}{{ ironic_inspector_ipa_httpboot_image_dir }}/{{ ironic_inspector_ipa_kernel_name }}"
+ironic_inspector_ipa_initrd_suffix_url: "{{ ironic_inspector_file_url_port}}{{ ironic_inspector_ipa_httpboot_image_dir }}/{{ ironic_inspector_ipa_initrd_name}}"
 # This variable is used by the repo_build process to determine
 # which host group to check for members of before building the
 # pip packages required by this role. The value is picked up

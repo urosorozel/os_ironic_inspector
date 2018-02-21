@@ -21,22 +21,22 @@
 - name: Set httpboot download path
   set_fact:
     ironic_inspector_ipa_download_path: "{{ ironic_inspector_ipa_httpboot_image_dir }}"
-  when: ironic_inspector_pxe_boot_mode == "ipxe"
+  when: ironic_inspector_pxe_boot_mode == "http"
 
 - name: Set tftpboot download path
   set_fact:
     ironic_inspector_ipa_download_path: "{{ ironic_inspector_ipa_tftpboot_image_dir }}"
-  when: ironic_inspector_pxe_boot_mode == "pxelinux"
+  when: ironic_inspector_pxe_boot_mode == "tftp"
 
 - name: Download ipa kernel image
   get_url:
     url: "{{ ironic_inspector_ipa_kernel_url }}"
-    dest: "{{ ironic_inspector_ipa_download_path }}/{{ ironic_inspector_ipa_kernel_url | basename }}"
+    dest: "{{ ironic_inspector_ipa_download_path }}/{{ ironic_inspector_ipa_kernel_name }}"
     checksum: "sha256:{{ironic_inspector_ipa_kernel_sha256.split(' ')[0]}}"
 
 - name: Download ipa initrd image
   get_url:
     url: "{{ ironic_inspector_ipa_initrd_url }}"
-    dest: "{{ ironic_inspector_ipa_download_path }}/{{ ironic_inspector_ipa_initrd_url | basename }}"
+    dest: "{{ ironic_inspector_ipa_download_path }}/{{ ironic_inspector_ipa_initrd_name }}"
     checksum: "sha256:{{ironic_inspector_ipa_initrd_sha256.split(' ')[0]}}"
 

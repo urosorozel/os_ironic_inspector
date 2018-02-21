@@ -5,13 +5,24 @@ rootwrap_config = /etc/ironic/rootwrap.conf
 auth_strategy = {{ ironic_inspector_openstack_auth_strategy }} 
 debug = {{ debug }}
 
+[capabilities]
+
+[cors]
+
 [database]
 connection = {{ ironic_inspector_openstack_db_connection_string }}
 max_overflow = {{ ironic_inspector_db_max_overflow }}
 max_pool_size = {{ ironic_inspector_db_max_pool_size }}
 pool_timeout = {{ ironic_inspector_db_pool_timeout }}
 
-[firewall]
+[discovery]
+{% if ironic_inspector_enable_discovery == true %}
+enroll_node_driver = {{ ironic_inspector_default_node_driver }}
+{% endif %}
+
+[dnsmasq_pxe_filter]
+
+[iptables]
 manage_firewall = {{ ironic_inspector_manage_firewall | bool | default('false') }}
 
 [ironic]
@@ -24,7 +35,7 @@ auth_url = {{ keystone_service_adminurl }}
 insecure = {{ keystone_service_adminuri_insecure | bool }}
 auth_type = {{ ironic_inspector_keystone_auth_plugin }}
 valid_interfaces = {{ ironic_inspector_valid_interfaces }}
-#insecure = False
+insecure = {{ keystone_service_internaluri_insecure | bool }}
 
 [keystone_authtoken]
 insecure = {{ keystone_service_internaluri_insecure | bool }}
@@ -37,11 +48,20 @@ project_name = {{ ironic_inspector_service_project_name }}
 username = {{ ironic_inspector_service_user_name }}
 password = {{ ironic_inspector_service_password }}
 region_name = {{ keystone_service_region }}
+memcached_servers = {{ memcached_servers }}
+# if your memcached server is shared, use these settings to avoid cache poisoning
+memcache_security_strategy = ENCRYPT
+memcache_secret_key = {{ memcached_encryption_key }}
+
+[oslo_policy]
+
+[pci_devices]
 
 [processing]
 add_ports = {{ ironic_inspector_port_addition | default('pxe') }}
 keep_ports = {{ ironic_inspector_keep_ports | default('present') }}
 store_data = {{ ironic_inspector_swift_store_data }} 
+store_data_location = {{ ironic_inspector_report_path }}
 ramdisk_logs_dir = {{ ironic_inspector_data_dir }}/log
 always_store_ramdisk_logs = {{ ironic_inspector_store_ramdisk_logs | default('true') | bool }}
 {% if ironic_inspector_processing_hooks is defined %}
@@ -49,9 +69,6 @@ processing_hooks = {{ ironic_inspector_processing_hooks }}
 {% endif %}
 {% if ironic_inspector_enable_discovery == true %}
 node_not_found_hook = enroll
-
-[discovery]
-enroll_node_driver = {{ ironic_inspector_default_node_driver }}
 {% endif %}
 
 [pxe_filter]
@@ -60,7 +77,7 @@ driver = {{ ironic_inspector_pxe_filter }}
 [swift]
 username = {{ ironic_inspector_swift_username }}
 password = {{ ironic_inspector_swift_password }}
-project_name = {{ ironic_inspector_service_project_name }}
+project_name = {{ ironic_inspector_swift_project_name }}
 user_domain_name = {{ ironic_inspector_service_domain_id | default("Default") }}
 project_domain_name = {{ ironic_inspector_service_domain_id | default("Default") }}
 auth_url = {{ keystone_service_adminurl }}

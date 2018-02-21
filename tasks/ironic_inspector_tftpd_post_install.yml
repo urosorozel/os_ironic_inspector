@@ -31,6 +31,11 @@
   notify:
     - Restart tftpd-hpa
 
+- name: Default pxelinux.0 config
+  template:
+    src: pxelinux-default.j2
+    dest: /tftpboot/pxelinux.cfg/default
+
 - name: Copy in tftpd-hpa map file
   copy:
     src: "map-file"

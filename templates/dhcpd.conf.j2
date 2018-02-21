@@ -7,6 +7,8 @@ allow bootp;
 ignore client-updates;
 set vendorclass = option vendor-class-identifier;
 option pxe-system-type code 93 = unsigned integer 16;
+set pxetype = option pxe-system-type;
+
 
 subnet {{ ironic_inspector_dhcp_subnet }} netmask {{ ironic_inspector_dhcp_subnet_mask }} {
      option routers             {{ ironic_inspector_dhcp_gateway }};
@@ -18,15 +20,15 @@ subnet {{ ironic_inspector_dhcp_subnet }} netmask {{ ironic_inspector_dhcp_subne
      next-server                {{ ansible_eth13.ipv4.address }};
      class "pxeclients" {
           match if substring (option vendor-class-identifier, 0, 9) = "PXEClient";
-          if exists user-class and option user-class = "iPXE" {
-              filename "http://{{ ansible_eth13.ipv4.address }}:{{ ironic_inspector_ipxe_suffix_url }}";
+          if pxetype=6 or pxetype=7 {
+              filename "syslinux.efi";
           } else {
-              if option pxe-system-type != 00:00 {
-                   filename "ipxe.efi";
-              } else {
-                   filename "undionly.kpxe";
-              }
-         }
+{% if ironic_inspector_boot_mode == "http" %}
+              filename "lpxelinux.0";
+{% else %}
+              filename "pxelinux.0";
+{% endif %}
+          }
     }
 }
 

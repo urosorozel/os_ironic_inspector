@@ -23,7 +23,7 @@ ironic_inspector_distro_packages:
   - libxml2-dev
   - syslinux
   - syslinux-common
-  - pxelinux
+  - syslinux-efi
   - libxslt1-dev
   - libpq-dev
   - python-yaml
@@ -37,5 +37,8 @@ ironic_inspector_standalone_distro_packages:
 
 ironic_inspector_library_modules_paths:
   - "/usr/lib/PXELINUX/pxelinux.0"
+  - "/usr/lib/PXELINUX/lpxelinux.0"
   - "/usr/lib/syslinux/modules/efi64/chain.c32"
   - "/usr/lib/syslinux/modules/bios/ldlinux.c32"
+  - "/usr/lib/SYSLINUX.EFI/efi64/syslinux.efi"
+  - "/usr/lib/syslinux/modules/efi64/ldlinux.e64"
