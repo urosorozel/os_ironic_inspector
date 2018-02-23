@@ -21,16 +21,22 @@ ironic_inspector_developer_mode_distro_packages:
 
 ironic_inspector_distro_packages:
   - libxml2-dev
+  - pxelinux
   - syslinux
   - syslinux-common
   - syslinux-efi
   - libxslt1-dev
   - libpq-dev
   - python-yaml
-  - tftpd-hpa
   - ipmitool
+ironic_inspector_http_distro_packages:
+  - nginx
+
+ironic_inspector_isc_dhcp_distro_packages:
   - tftpd-hpa
   - isc-dhcp-server
+
+ironic_inspector_dnsmasq_distro_packages:
   - dnsmasq
 
 ironic_inspector_standalone_distro_packages:

@@ -1,5 +1,5 @@
 ---
-# Copyright 2017, Rackspace US, Inc.
+# Copyright 2018, Rackspace US, Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -19,6 +19,14 @@ ironic_inspector_packages_list: >
   {%- set package_list = [] %}
   {%- if ironic_inspector_developer_mode | bool %}
   {%-   set package_list = package_list + ironic_inspector_developer_mode_distro_packages %}
+  {%- endif %}
+  {%- if ironic_inspector_dhcp_type == "dnsmasq" %}
+  {%-   set package_list = package_list + ironic_inspector_dnsmasq_distro_packages %}
+  {%- else %}
+  {%-   set package_list = package_list + ironic_inspector_isc_dhcp_distro_packages %}
+  {%- endif %}
+  {%- if ironic_inspector_boot_mode == "http" %}
+  {%-   set package_list = package_list + ironic_inspector_http_distro_packages %}
   {%- endif %}
   {%- if inventory_hostname in groups['ironic_inspector'] %}
   {%-   set package_list = package_list + ironic_inspector_distro_packages %}

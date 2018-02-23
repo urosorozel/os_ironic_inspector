@@ -1,5 +1,5 @@
 ---
-# Copyright 2015, Rackspace US, Inc.
+# Copyright 2018, Rackspace US, Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -27,3 +27,10 @@
     line: 'INTERFACES="{{ ironic_inspector_dhcp_interface }}"'
   notify:
     - Restart isc-dhcp-server
+
+- name: Copy in tftpd-hpa config file
+  template:
+    src: "tftpd-hpa.j2"
+    dest: "/etc/default/tftpd-hpa"
+  notify:
+    - Restart tftpd-hpa

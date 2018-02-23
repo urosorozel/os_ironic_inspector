@@ -40,7 +40,7 @@ http {
 	gzip on;
 
 	server {
-		listen {{ ironic_inspector_file_url_port }};
+		listen {{ ironic_inspector_nginx_port }};
 		server_name {{ ansible_hostname }};
 		root {{ ironic_inspector_ipa_httpboot_image_dir }};
 		location {{ ironic_inspector_ipa_httpboot_image_dir }}/ {

@@ -1,5 +1,5 @@
 ---
-# Copyright 2015, Rackspace US, Inc.
+# Copyright 2018, Rackspace US, Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -89,7 +89,6 @@ ironic_inspector_galera_database: ironic_inspector
 ironic_inspector_keystone_auth_plugin: password
 
 ironic_inspector_openstack_auth_strategy: keystone
-#ironic_openstack_api_url: ''  # Not required when we have keystone
 
 # Standalone Ironic configuration
 ironic_inspector_standalone_auth_strategy: noauth
@@ -173,8 +172,9 @@ ironic_inspector_dhcp_nameservers: 10.30.40.1
 ironic_inspector_dhcp_lease_time: 600
 # Ironic inspector nginx
 ironic_inspector_nginx_log_dir: /var/log/nginx
-ironic_inspector_file_url_port: 8080
+ironic_inspector_nginx_port: 8080
 
+ironic_inspector_dhcp_type: dnsmasq # isc_dhcp
 ironic_inspector_boot_mode: http # tftp
 ironic_inspector_pxe_boot_mode: "{{ ironic_inspector_boot_mode | default('http') }}"
 ironic_inspector_ipa_httpboot_image_dir: /httpboot
@@ -186,8 +186,8 @@ ironic_inspector_ipa_initrd_url: https://tarballs.openstack.org/ironic-python-ag
 ironic_inspector_ipa_initrd_name: ipa_ramdisk
 ironic_inspector_ipa_initrd_sha256_url: https://tarballs.openstack.org/ironic-python-agent/tinyipa/files/tinyipa-stable-pike.gz.sha256
 
-ironic_inspector_ipa_kernel_suffix_url: "{{ ironic_inspector_file_url_port}}{{ ironic_inspector_ipa_httpboot_image_dir }}/{{ ironic_inspector_ipa_kernel_name }}"
-ironic_inspector_ipa_initrd_suffix_url: "{{ ironic_inspector_file_url_port}}{{ ironic_inspector_ipa_httpboot_image_dir }}/{{ ironic_inspector_ipa_initrd_name}}"
+ironic_inspector_ipa_kernel_suffix_url: "{{ ironic_inspector_nginx_port}}{{ ironic_inspector_ipa_httpboot_image_dir }}/{{ ironic_inspector_ipa_kernel_name }}"
+ironic_inspector_ipa_initrd_suffix_url: "{{ ironic_inspector_nginx_port}}{{ ironic_inspector_ipa_httpboot_image_dir }}/{{ ironic_inspector_ipa_initrd_name}}"
 # This variable is used by the repo_build process to determine
 # which host group to check for members of before building the
 # pip packages required by this role. The value is picked up

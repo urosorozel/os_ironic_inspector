@@ -1,5 +1,5 @@
 ---
-# Copyright 2015, Rackspace US, Inc.
+# Copyright 2018, Rackspace US, Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -24,13 +24,6 @@
     - /tftpboot
     - /tftpboot/pxelinux.cfg
 
-- name: Copy in tftpd-hpa config file
-  template:
-    src: "tftpd-hpa.j2"
-    dest: "/etc/default/tftpd-hpa"
-  notify:
-    - Restart tftpd-hpa
-
 - name: Default pxelinux.0 config
   template:
     src: pxelinux-default.j2
@@ -40,8 +33,6 @@
   copy:
     src: "map-file"
     dest: "/tftpboot/map-file"
-  notify:
-    - Restart tftpd-hpa
 
 - name: Copy library modules into /tftpboot
   copy:

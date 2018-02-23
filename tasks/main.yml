@@ -1,5 +1,5 @@
 ---
-# Copyright 2015, Rackspace US, Inc.
+# Copyright 2018, Rackspace US, Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -51,7 +51,7 @@
   tags:
     - ironic-inspector-config
 
-- include: ironic_inspector_tftpd_post_install.yml 
+- include: ironic_inspector_tftpboot_post_install.yml
   tags:
     - ironic-inspector-config
 
@@ -64,12 +64,12 @@
     - ironic-inspector-ipa
 
 - include: ironic_inspector_dhcp_post_install.yml
-  when: ironic_inspector_pxe_filter == "iptables"
+  when: ironic_inspector_dhcp_type == "isc_dhcp"
   tags:
     - ironic-inspector-dhcp
 
 - include: ironic_inspector_dnsmasq_post_install.yml
-  when: ironic_inspector_pxe_filter == "dnsmasq"
+  when: ironic_inspector_dhcp_type == "dnsmasq"
   tags:
     - ironic-inspector-dnsmasq
 
@@ -77,12 +77,3 @@
   tags:
     - ironic-inspector-nginx
 
-#- include: ironic_inspector_dnsmasq.yml
-#  when: inventory_hostname == groups['ironic_inspector']
-#  tags:
-#    - ironic-inspector-config
-#
-#- include: ironic_inspector_nginx.yml
-#  when: inventory_hostname == groups['ironic_inspector']
-#  tags:
-#    - ironic-inspector-config
