@@ -31,6 +31,7 @@ ironic_inspector_distro_packages:
   - ipmitool
   - tftpd-hpa
   - isc-dhcp-server
+  - dnsmasq
 
 ironic_inspector_standalone_distro_packages:
   - isc-dhcp-server

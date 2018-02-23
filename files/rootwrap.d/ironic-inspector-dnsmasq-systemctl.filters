@@ -1,0 +1,4 @@
+[Filters]
+# ironic_inspector/pxe_filter/dnsmasq.py
+systemctl: CommandFilter, systemctl, root, restart, dnsmasq
+systemctl: CommandFilter, systemctl, root, stop, dnsmasq

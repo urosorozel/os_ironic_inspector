@@ -20,8 +20,3 @@
   notify:
     - Restart nginx
 
-- name: Output default ipxe config
-  template:
-    src: "ironic-inspector-ipxe.j2"
-    dest: "{{ ironic_inspector_ipa_httpboot_image_dir }}/ironic-inspector-ipxe"
-

@@ -17,7 +17,7 @@ subnet {{ ironic_inspector_dhcp_subnet }} netmask {{ ironic_inspector_dhcp_subne
      range dynamic-bootp        {{ ironic_inspector_dhcp_pool_range }};
      default-lease-time         {{ ironic_inspector_dhcp_lease_time }};
      max-lease-time             43200;
-     next-server                {{ ansible_eth13.ipv4.address }};
+     next-server                {{ hostvars[inventory_hostname]['ansible_' + ironic_inspector_dhcp_interface]['ipv4']['address'] }};
      class "pxeclients" {
           match if substring (option vendor-class-identifier, 0, 9) = "PXEClient";
           if pxetype=6 or pxetype=7 {

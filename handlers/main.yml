@@ -38,3 +38,9 @@
     name: "nginx"
     state: restarted
   failed_when: false
+
+- name: Restart dnsmasq
+  service:
+    name: "dnsmasq"
+    state: restarted
+  failed_when: false

@@ -1,7 +1,7 @@
 # {{ ansible_managed }}
 
 [DEFAULT]
-rootwrap_config = /etc/ironic/rootwrap.conf
+rootwrap_config = /etc/ironic-inspector/rootwrap.conf
 auth_strategy = {{ ironic_inspector_openstack_auth_strategy }} 
 debug = {{ debug }}
 
@@ -21,9 +21,17 @@ enroll_node_driver = {{ ironic_inspector_default_node_driver }}
 {% endif %}
 
 [dnsmasq_pxe_filter]
+{% if ironic_inspector_pxe_filter == "dnsmasq" %}
+dhcp_hostsdir = /etc/dnsmasq.d/dhcp-hostsdir
+dnsmasq_start_command = systemctl start dnsmasq
+dnsmasq_stop_command  = systemctl stop dnsmasq
+{% endif %}
 
 [iptables]
+{% if ironic_inspector_pxe_filter == "iptables" %}
 manage_firewall = {{ ironic_inspector_manage_firewall | bool | default('false') }}
+{% endif %}
+dnsmasq_interface =  {{ironic_inspector_dhcp_interface }}
 
 [ironic]
 username = {{ ironic_inspector_service_user_name }}

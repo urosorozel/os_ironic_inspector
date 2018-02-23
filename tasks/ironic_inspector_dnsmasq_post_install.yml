@@ -13,17 +13,20 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-- name: Copy in dhcpd config file
+- name: Copy in dnsmqsq config file
   template:
-    src: "dhcpd.conf.j2"
-    dest: "/etc/dhcp/dhcpd.conf"
+    src: "dnsmasq.conf.j2"
+    dest: "/etc/dnsmasq.conf"
   notify:
-    - Restart isc-dhcp-server
+    - Restart dnsmasq
 
-- lineinfile:
-    path: /etc/default/isc-dhcp-server
-    state: present
-    regexp: '^INTERFACES='
-    line: 'INTERFACES="{{ ironic_inspector_dhcp_interface }}"'
-  notify:
-    - Restart isc-dhcp-server
+
+- name: Create  directories
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: "{{ ironic_inspector_system_user_name }}"
+    group: "{{ ironic_inspector_system_group_name }}"
+    mode: "0755"
+  with_items:
+    - /etc/dnsmasq.d/dhcp-hostsdir
