@@ -80,7 +80,11 @@ node_not_found_hook = enroll
 {% endif %}
 
 [pxe_filter]
+{% if ironic_inspector_dhcp_type == "isc_dhcp" %}
+driver = iptables
+{% else %}
 driver = {{ ironic_inspector_pxe_filter }}
+{% endif %}
 
 [swift]
 username = {{ ironic_inspector_swift_username }}

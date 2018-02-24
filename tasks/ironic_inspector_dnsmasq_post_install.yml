@@ -13,6 +13,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+- lineinfile:
+    path: /etc/default/dnsmasq
+    state: present
+    regexp: '^#IGNORE_RESOLVCONF='
+    line: 'IGNORE_RESOLVCONF=yes'
+  notify:
+    - Restart dnsmasq
+
 - name: Copy in dnsmqsq config file
   template:
     src: "dnsmasq.conf.j2"

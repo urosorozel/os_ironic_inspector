@@ -74,6 +74,7 @@
     - ironic-inspector-dnsmasq
 
 - include: ironic_inspector_nginx_post_install.yml
+  when: ironic_inspector_boot_mode == "http"
   tags:
     - ironic-inspector-nginx
 
