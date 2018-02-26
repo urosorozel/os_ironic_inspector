@@ -16,8 +16,16 @@
 - lineinfile:
     path: /etc/default/dnsmasq
     state: present
-    regexp: '^#IGNORE_RESOLVCONF='
+    line: 'DNSMASQ_EXCEPT=lo'
+  notify:
+    - Restart dnsmasq
+
+- lineinfile:
+    path: /etc/default/dnsmasq
+    state: present
+    regexp: '^#IGNORE_RESOLVCONF=.*'
     line: 'IGNORE_RESOLVCONF=yes'
+    backrefs: yes
   notify:
     - Restart dnsmasq
 
@@ -27,7 +35,6 @@
     dest: "/etc/dnsmasq.conf"
   notify:
     - Restart dnsmasq
-
 
 - name: Create  directories
   file:
