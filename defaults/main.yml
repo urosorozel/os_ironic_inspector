@@ -158,7 +158,7 @@ ironic_inspector_port_addition: pxe
 ironic_inspector_keep_ports: present
 ironic_inspector_ramdisk_logs_dir:
 ironic_inspector_always_store_ramdisk_logs: True
-ironic_inspector_default_node_driver: agent_ipmitool
+ironic_inspector_default_node_driver: ipmi
 #ironic_inspector_processing_hooks: ramdisk_error,root_disk_selection,scheduler,validate_interfaces,capabilities,pci_devices
 ironic_inspector_node_not_found_hook: enroll
 ironic_inspector_pxe_filter: dnsmasq #iptables
