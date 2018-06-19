@@ -151,7 +151,7 @@ ironic_inspector_swift_store_data: swift
 ironic_inspector_enable_discovery: True
 ironic_inspector_valid_interfaces: internal
 ironic_inspector_manage_firewall: True
-ironic_inspector_dhcp_interface: eth13
+ironic_inspector_dhcp_interface: eth15
 ironic_inspector_openstack_db_connection_string: "mysql+pymysql://{{ ironic_inspector_galera_user }}:{{ ironic_inspector_container_mysql_password }}@{{ ironic_inspector_galera_address }}/{{ ironic_inspector_galera_database }}"
 ironic_inspector_data_dir: /ironic
 ironic_inspector_port_addition: pxe
@@ -164,11 +164,11 @@ ironic_inspector_node_not_found_hook: enroll
 ironic_inspector_pxe_filter: dnsmasq #iptables
 ironic_inspector_report_path: report_path
 # Ironic inspector dhcp
-ironic_inspector_dhcp_pool_range: 10.30.40.20 10.30.40.30
-ironic_inspector_dhcp_subnet: 10.30.40.0
-ironic_inspector_dhcp_subnet_mask: 255.255.255.0
-ironic_inspector_dhcp_gateway: 10.30.40.1
-ironic_inspector_dhcp_nameservers: 10.30.40.1
+ironic_inspector_dhcp_pool_range: 172.30.0.5 172.30.0.50
+ironic_inspector_dhcp_subnet: 172.30.0.0
+ironic_inspector_dhcp_subnet_mask: 255.255.252.0
+ironic_inspector_dhcp_gateway: 172.30.0.1
+ironic_inspector_dhcp_nameservers: 172.30.0.1
 ironic_inspector_dhcp_lease_time: 600
 # Ironic inspector nginx
 ironic_inspector_nginx_log_dir: /var/log/nginx
