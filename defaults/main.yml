@@ -200,6 +200,6 @@ ironic_inspector_rootwrap_conf_overrides: {}
 ironic_inspector_policy_overrides: {}
 
 # pxe boot
-ironic_inspector_pxe_append_params: "ipa-debug=1 systemd.journald.forward_to_console=yes" #ipa-inspection-collectors=default,logs,extra_hardware
+ironic_inspector_pxe_append_params: "ipa-debug=1 systemd.journald.forward_to_console=yes ipa-insecure=1" #ipa-inspection-collectors=default,logs,extra_hardware
 
 ironic_inspector_init_config_overrides: {}
