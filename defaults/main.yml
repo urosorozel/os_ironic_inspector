@@ -27,7 +27,7 @@ ironic_inspector_pip_package_state: "latest"
 # to build an environment directly from a git source without the presence
 # of an OpenStack-Ansible repo_server.
 ironic_inspector_git_repo: https://git.openstack.org/openstack/ironic-inspector
-ironic_inspector_git_install_branch: stable/pike
+ironic_inspector_git_install_branch: stable/rocky
 
 ironic_inspector_developer_mode: false
 ironic_inspector_developer_constraints:
@@ -83,6 +83,8 @@ ironic_inspector_service_in_ldap: False
 ironic_inspector_standalone: False
 
 # Database
+ironic_inspector_db_setup_host: "{{ ('galera_all' in groups) | ternary(groups['galera_all'][0], 'localhost') }}"
+ironic_inspector_galera_address: "{{ galera_address | default('127.0.0.1') }}"
 ironic_inspector_galera_user: ironic-inspector
 ironic_inspector_galera_database: ironic_inspector
 ## Keystone authentication middleware
@@ -151,7 +153,7 @@ ironic_inspector_swift_store_data: swift
 ironic_inspector_enable_discovery: True
 ironic_inspector_valid_interfaces: internal
 ironic_inspector_manage_firewall: True
-ironic_inspector_dhcp_interface: eth13
+ironic_inspector_dhcp_interface: eth15
 ironic_inspector_openstack_db_connection_string: "mysql+pymysql://{{ ironic_inspector_galera_user }}:{{ ironic_inspector_container_mysql_password }}@{{ ironic_inspector_galera_address }}/{{ ironic_inspector_galera_database }}"
 ironic_inspector_data_dir: /ironic
 ironic_inspector_port_addition: pxe
@@ -164,11 +166,11 @@ ironic_inspector_node_not_found_hook: enroll
 ironic_inspector_pxe_filter: dnsmasq #iptables
 ironic_inspector_report_path: report_path
 # Ironic inspector dhcp
-ironic_inspector_dhcp_pool_range: 10.30.40.20 10.30.40.30
-ironic_inspector_dhcp_subnet: 10.30.40.0
-ironic_inspector_dhcp_subnet_mask: 255.255.255.0
-ironic_inspector_dhcp_gateway: 10.30.40.1
-ironic_inspector_dhcp_nameservers: 10.30.40.1
+ironic_inspector_dhcp_pool_range: 172.30.0.20 172.30.0.30
+ironic_inspector_dhcp_subnet: 172.30.0.0
+ironic_inspector_dhcp_subnet_mask: 255.255.252.0
+ironic_inspector_dhcp_gateway: 172.30.0.1
+ironic_inspector_dhcp_nameservers: 172.30.0.1
 ironic_inspector_dhcp_lease_time: 600
 # Ironic inspector nginx
 ironic_inspector_nginx_log_dir: /var/log/nginx
@@ -179,12 +181,12 @@ ironic_inspector_boot_mode: http # tftp
 ironic_inspector_pxe_boot_mode: "{{ ironic_inspector_boot_mode | default('http') }}"
 ironic_inspector_ipa_httpboot_image_dir: /httpboot
 ironic_inspector_ipa_tftpboot_image_dir: /tftpboot
-ironic_inspector_ipa_kernel_url: https://tarballs.openstack.org/ironic-python-agent/tinyipa/files/tinyipa-stable-pike.vmlinuz
+ironic_inspector_ipa_kernel_url: https://tarballs.openstack.org/ironic-python-agent/tinyipa/files/tinyipa-stable-rocky.vmlinuz
 ironic_inspector_ipa_kernel_name: ipa_kernel
-ironic_inspector_ipa_kernel_sha256_url: https://tarballs.openstack.org/ironic-python-agent/tinyipa/files/tinyipa-stable-pike.vmlinuz.sha256
-ironic_inspector_ipa_initrd_url: https://tarballs.openstack.org/ironic-python-agent/tinyipa/files/tinyipa-stable-pike.gz
+ironic_inspector_ipa_kernel_sha256_url: https://tarballs.openstack.org/ironic-python-agent/tinyipa/files/tinyipa-stable-rocky.vmlinuz.sha256
+ironic_inspector_ipa_initrd_url: https://tarballs.openstack.org/ironic-python-agent/tinyipa/files/tinyipa-stable-rocky.gz
 ironic_inspector_ipa_initrd_name: ipa_ramdisk
-ironic_inspector_ipa_initrd_sha256_url: https://tarballs.openstack.org/ironic-python-agent/tinyipa/files/tinyipa-stable-pike.gz.sha256
+ironic_inspector_ipa_initrd_sha256_url: https://tarballs.openstack.org/ironic-python-agent/tinyipa/files/tinyipa-stable-rocky.gz.sha256
 
 ironic_inspector_ipa_kernel_suffix_url: "{{ ironic_inspector_nginx_port}}{{ ironic_inspector_ipa_httpboot_image_dir }}/{{ ironic_inspector_ipa_kernel_name }}"
 ironic_inspector_ipa_initrd_suffix_url: "{{ ironic_inspector_nginx_port}}{{ ironic_inspector_ipa_httpboot_image_dir }}/{{ ironic_inspector_ipa_initrd_name}}"
