@@ -20,7 +20,7 @@
     update_cache: "{{ (ansible_pkg_mgr == 'apt') | ternary('yes', omit) }}"
     cache_valid_time: "{{ (ansible_pkg_mgr == 'apt') | ternary(cache_timeout, omit) }}"
   register: install_packages
-  until: install_packages|success
+  until: install_packages is success
   retries: 5
   delay: 2
 
@@ -32,19 +32,6 @@
       {{ item }}
       {% endfor %}
   when: ironic_inspector_developer_mode | bool
-
-- name: Install requires pip packages
-  pip:
-    name: "{{ ironic_inspector_requires_pip_packages }}"
-    state: "{{ ironic_inspector_pip_package_state }}"
-    extra_args: >-
-      {{ ironic_inspector_developer_mode | ternary(pip_install_developer_constraints | default('--constraint /opt/developer-pip-constraints.txt'), '') }}
-      {{ (pip_install_upper_constraints is defined) | ternary('--constraint ' + pip_install_upper_constraints | default(''),'') }}
-      {{ pip_install_options | default('') }}
-  register: install_packages
-  until: install_packages|success
-  retries: 5
-  delay: 2
 
 - name: Retrieve checksum for venv download
   uri:
@@ -65,23 +52,23 @@
   file:
     path: "{{ ironic_inspector_bin | dirname }}"
     state: absent
-  when: ironic_inspector_get_venv | changed
+  when: ironic_inspector_get_venv  is changed
 
-- name: Create ironic inspector venv dir
+- name: Create ironic venv dir
   file:
     path: "{{ ironic_inspector_bin | dirname }}"
     state: directory
     mode: "0755"
   register: ironic_inspector_venv_dir
-  when: ironic_inspector_get_venv | changed
+  when: ironic_inspector_get_venv  is changed
 
 - name: Unarchive pre-built venv
   unarchive:
     src: "/var/cache/{{ ironic_inspector_venv_download_url | basename }}"
     dest: "{{ ironic_inspector_bin | dirname }}"
     copy: "no"
-  when: ironic_inspector_get_venv | changed
-  notify: Restart ironic inspector services 
+  when: ironic_inspector_get_venv  is changed
+  notify: Restart ironic inspector services
 
 - name: Install pip packages
   pip:
@@ -94,24 +81,48 @@
       {{ (pip_install_upper_constraints is defined) | ternary('--constraint ' + pip_install_upper_constraints | default(''),'') }}
       {{ pip_install_options | default('') }}
   register: install_packages
-  until: install_packages|success
+  until: install_packages is success
   retries: 5
   delay: 2
   when: ironic_inspector_get_venv | failed or ironic_inspector_get_venv | skipped
-  notify: Restart ironic inspector services 
+  notify: Restart ironic inspector services
 
-- name: CentOS remove python from path first
+- name: Remove python from path first (CentOS, openSUSE)
   file:
     path:  "{{ ironic_inspector_bin | dirname }}/bin/python2.7"
     state: "absent"
   when:
-    - ansible_pkg_mgr == 'yum'
-    - ironic_inspector_get_venv | changed
+    - ansible_pkg_mgr in ['yum', 'zypper']
+    - ironic_inspector_get_venv  is changed
 
+# NOTE(odyssey4me):
+# We reinitialize the venv to ensure that the right
+# version of python is in the venv, but we do not
+# want virtualenv to also replace pip, setuptools
+# and wheel so we tell it not to.
+# We do not use --always-copy for CentOS/SuSE due
+# to https://github.com/pypa/virtualenv/issues/565
 - name: Update virtualenv path
-  command: >
-    virtualenv-tools --update-path=auto --reinitialize {{ ironic_inspector_bin | dirname }}
-  when: ironic_inspector_get_venv | changed
+  shell: |
+    find {{ ironic_inspector_bin }} -name \*.pyc -delete
+    sed -si '1s/^.*python.*$/#!{{ ironic_inspector_bin | replace ('/','\/') }}\/python/' {{ ironic_inspector_bin }}/*
+    virtualenv {{ ironic_inspector_bin | dirname }} \
+        {{ (ansible_pkg_mgr == 'apt') | ternary('--always-copy', '') }} \
+        --no-pip \
+        --no-setuptools \
+        --no-wheel
+  when: ironic_inspector_get_venv  is changed
+  tags:
+    - skip_ansible_lint
+
+- name: Install optional pip packages
+  pip:
+    name: "{{ ironic_inspector_requires_pip_packages }}"
+    state: "{{ ironic_inspector_pip_package_state }}"
+  register: install_optional_packages
+  until: install_optional_packages is success
+  retries: 5
+  delay: 2
 
 - name: Record the venv tag deployed
   ini_file:
