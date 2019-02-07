@@ -37,6 +37,8 @@ ironic_inspector_developer_constraints:
 ironic_inspector_venv_tag: untagged
 ironic_inspector_bin: "/openstack/venvs/ironic-inspector-{{ ironic_inspector_venv_tag }}/bin"
 
+# enable ironic inspector in ironic
+ironic_inspector_ironic_enable: True
 # System info
 ironic_inspector_system_user_name: ironic-inspector
 ironic_inspector_system_group_name: ironic-inspector
