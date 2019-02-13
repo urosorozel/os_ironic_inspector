@@ -24,61 +24,57 @@
   tags:
     - always
 
-- block:
-  - include: ironic_inspector_pre_install.yml
-    tags:
-      - ironic-inspector-install
-  
-  - include: ironic_inspector_install.yml
-    tags:
-      - ironic-inspector-install
-  
-  
-  - include: ironic_inspector_post_install.yml
-    tags:
-      - ironic-inspector-config
-  
-  - include: ironic_inspector_db_setup.yml
-    when: inventory_hostname == groups['ironic_inspector'][0]
-    tags:
-      - ironic-inspector-config
-  
-  - include: "ironic_inspector_init_{{ ansible_service_mgr }}.yml"
-    tags:
-      - ironic-inspector-config
-  
-  - include: ironic_inspector_service_setup.yml
-    when: inventory_hostname == groups['ironic_inspector'][0]
-    tags:
-      - ironic-inspector-config
-  
-  - include: ironic_inspector_tftpboot_post_install.yml
-    tags:
-      - ironic-inspector-config
-  
-  - include: ironic_inspector_httpboot_post_install.yml
-    tags:
-      - ironic-inspector-config
-  
-  - include: ironic_inspector_ipa_download.yml
-    tags: 
-      - ironic-inspector-ipa
-  
-  - include: ironic_inspector_dhcp_post_install.yml
-    when: ironic_inspector_dhcp_type == "isc_dhcp"
-    tags:
-      - ironic-inspector-dhcp
-  
-  - include: ironic_inspector_dnsmasq_post_install.yml
-    when: ironic_inspector_dhcp_type == "dnsmasq"
-    tags:
-      - ironic-inspector-dnsmasq
-  
-  - include: ironic_inspector_nginx_post_install.yml
-    when: ironic_inspector_boot_mode == "http"
-    tags:
-      - ironic-inspector-nginx
-  when: inventory_hostname in groups['ironic_inspector']
+ - include: ironic_inspector_pre_install.yml
+   tags:
+     - ironic-inspector-install
+ 
+ - include: ironic_inspector_install.yml
+   tags:
+     - ironic-inspector-install
+ 
+ 
+ - include: ironic_inspector_post_install.yml
+   tags:
+     - ironic-inspector-config
+ 
+ - include: ironic_inspector_db_setup.yml
+   when: inventory_hostname == groups['ironic_inspector'][0]
+   tags:
+     - ironic-inspector-config
+ 
+ - include: "ironic_inspector_init_{{ ansible_service_mgr }}.yml"
+   tags:
+     - ironic-inspector-config
+ 
+ - include: ironic_inspector_service_setup.yml
+   when: inventory_hostname == groups['ironic_inspector'][0]
+   tags:
+     - ironic-inspector-config
+ 
+ - include: ironic_inspector_tftpboot_post_install.yml
+   tags:
+     - ironic-inspector-config
+ 
+ - include: ironic_inspector_httpboot_post_install.yml
+   tags:
+     - ironic-inspector-config
+ 
+ - include: ironic_inspector_ipa_download.yml
+   tags:
+     - ironic-inspector-ipa
+ 
+ - include: ironic_inspector_dhcp_post_install.yml
+   when: ironic_inspector_dhcp_type == "isc_dhcp"
+   tags:
+     - ironic-inspector-dhcp
+ 
+ - include: ironic_inspector_dnsmasq_post_install.yml
+   when: ironic_inspector_dhcp_type == "dnsmasq"
+   tags:
+     - ironic-inspector-dnsmasq
+ 
+ - include: ironic_inspector_nginx_post_install.yml
+   when: ironic_inspector_boot_mode == "http"
+   tags:
+     - ironic-inspector-nginx
 
-- include: ironic_inspector_enable_ironic.yml
-  when: inventory_hostname in groups['ironic_conductor']
