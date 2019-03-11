@@ -134,6 +134,7 @@ ironic_inspector_pip_packages:
 # Auth
 ironic_inspector_service_user_name: "ironic_inspector"
 
+ironic_inspector_boot_mode_record: True
 ### OpenStack Services to integrate with
 # Ironic swift store information
 ironic_inspector_swift_container: ironic-inspector

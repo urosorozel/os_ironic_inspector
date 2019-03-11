@@ -6,6 +6,7 @@ auth_strategy = {{ ironic_inspector_openstack_auth_strategy }}
 debug = {{ debug }}
 
 [capabilities]
+boot_mode = {{ ironic_inspector_boot_mode_record | bool | default('false') }}
 
 [cors]
 
