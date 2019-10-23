@@ -2,8 +2,8 @@ default inspect
 
 label inspect
 {% if ironic_inspector_boot_mode == "http" %}
-kernel http://{{ ansible_eth15.ipv4.address }}:{{ ironic_inspector_ipa_kernel_suffix_url }}
-append initrd=http://{{ ansible_eth15.ipv4.address }}:{{ ironic_inspector_ipa_initrd_suffix_url }} ipa-inspection-callback-url=http://{{ external_lb_vip_address }}:5050/v1/continue nomodeset vga=normal console=tty0 console=ttyS0,115200n8 {{ ironic_inspector_pxe_append_params | default('') }}
+kernel http://{{ ansible_br_pxe.ipv4.address }}:{{ ironic_inspector_ipa_kernel_suffix_url }}
+append initrd=http://{{ ansible_br_pxe.ipv4.address }}:{{ ironic_inspector_ipa_initrd_suffix_url }} ipa-inspection-callback-url=http://{{ external_lb_vip_address }}:5050/v1/continue nomodeset vga=normal console=tty0 console=ttyS0,115200n8 {{ ironic_inspector_pxe_append_params | default('') }}
 {% else %}
 kernel {{ ironic_inspector_ipa_kernel_name }}
 append initrd={{ ironic_inspector_ipa_initrd_name }} ipa-inspection-callback-url=http://{{ external_lb_vip_address }}:5050/v1/continue nomodeset vga=normal console=tty0 console=ttyS0,115200n8 {{ ironic_inspector_pxe_append_params | default('') }}

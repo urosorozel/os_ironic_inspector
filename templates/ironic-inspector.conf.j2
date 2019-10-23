@@ -5,6 +5,9 @@ rootwrap_config = /etc/ironic-inspector/rootwrap.conf
 auth_strategy = {{ ironic_inspector_openstack_auth_strategy }} 
 debug = {{ debug }}
 
+## RPC Backend
+transport_url = {{ ironic_inspector_oslomsg_rpc_transport }}://{% for host in ironic_inspector_oslomsg_rpc_servers.split(',') %}{{ ironic_inspector_oslomsg_rpc_userid }}:{{ ironic_inspector_oslomsg_rpc_password }}@{{ host }}:{{ ironic_inspector_oslomsg_rpc_port }}{% if not loop.last %},{% else %}/{{ ironic_inspector_oslomsg_rpc_vhost }}{% if ironic_inspector_oslomsg_rpc_use_ssl | bool %}?ssl=1{% else %}?ssl=0{% endif %}{% endif %}{% endfor %}
+
 [capabilities]
 boot_mode = {{ ironic_inspector_boot_mode_record | bool | default('false') }}
 
@@ -61,6 +64,18 @@ memcached_servers = {{ memcached_servers }}
 # if your memcached server is shared, use these settings to avoid cache poisoning
 memcache_security_strategy = ENCRYPT
 memcache_secret_key = {{ memcached_encryption_key }}
+
+[oslo_concurrency]
+lock_path = {{ ironic_inspector_lock_path }}
+
+[oslo_messaging_amqp]
+
+[oslo_messaging_notifications]
+transport_url = {{ ironic_inspector_oslomsg_notify_transport }}://{% for host in ironic_inspector_oslomsg_notify_servers.split(',') %}{{ ironic_inspector_oslomsg_notify_userid }}:{{ ironic_inspector_oslomsg_notify_password }}@{{ host }}:{{ ironic_inspector_oslomsg_notify_port }}{% if not loop.last %},{% else %}/{{ ironic_inspector_oslomsg_notify_vhost }}{% if ironic_inspector_oslomsg_notify_use_ssl | bool %}?ssl=1{% else %}?ssl=0{% endif %}{% endif %}{% endfor %}
+
+[oslo_messaging_rabbit]
+ssl = {{ ironic_inspector_oslomsg_rpc_use_ssl }}
+pool_max_size = {{ ironic_inspector_wsgi_processes }}
 
 [oslo_policy]
 
