@@ -24,57 +24,95 @@
   tags:
     - always
 
-- include: ironic_inspector_pre_install.yml
+- include_tasks: ironic_inspector_pre_install.yml
   tags:
     - ironic-inspector-install
 
-- include: ironic_inspector_install.yml
+- debug: var=ironic_inspector_git_constraints
+- debug: var=ironic_inspector_bin
+
+- name: Install the python venv
+  import_role:
+    name: "python_venv_build"
+  vars:
+    venv_build_constraints: "{{ ironic_inspector_git_constraints }}"
+    venv_build_distro_package_list: "{{ ironic_inspector_devel_distro_packages }}"
+    venv_install_destination_path: "{{ ironic_inspector_bin | dirname }}"
+    venv_install_distro_package_list: "{{ ironic_inspector_packages_list }}"
+    venv_pip_install_args: "{{ ironic_inspector_pip_install_args }}"
+    venv_pip_packages: "{{ (ironic_inspector_oslomsg_amqp1_enabled | bool) | ternary(ironic_inspector_pip_packages + ironic_inspector_optional_oslomsg_amqp1_pip_packages, ironic_inspector_pip_packages) }}"
+    venv_facts_when_changed:
+      - section: "ironic-inspector"
+        option: "venv_tag"
+        value: "{{ ironic_inspector_venv_tag }}"
   tags:
     - ironic-inspector-install
 
-
-- include: ironic_inspector_post_install.yml
+- include_tasks: ironic_inspector_post_install.yml
   tags:
     - ironic-inspector-config
 
-- include: ironic_inspector_db_setup.yml
+- import_tasks: ironic_inspector_uwsgi.yml
+  tags:
+    - ironic-config
+
+- import_tasks: mq_setup.yml
+  when:
+    - "ironic_inspector_services['ironic-inspector']['group'] in group_names"
+    - "inventory_hostname == ((groups[ironic_inspector_services['ironic-inspector']['group']]| intersect(ansible_play_hosts)) | list)[0]"
+  vars:
+    _oslomsg_rpc_setup_host: "{{ ironic_inspector_oslomsg_rpc_setup_host }}"
+    _oslomsg_rpc_userid: "{{ ironic_inspector_oslomsg_rpc_userid }}"
+    _oslomsg_rpc_password: "{{ ironic_inspector_oslomsg_rpc_password }}"
+    _oslomsg_rpc_vhost: "{{ ironic_inspector_oslomsg_rpc_vhost }}"
+    _oslomsg_rpc_transport: "{{ ironic_inspector_oslomsg_rpc_transport }}"
+    _oslomsg_notify_setup_host: "{{ ironic_inspector_oslomsg_notify_setup_host }}"
+    _oslomsg_notify_userid: "{{ ironic_inspector_oslomsg_notify_userid }}"
+    _oslomsg_notify_password: "{{ ironic_inspector_oslomsg_notify_password }}"
+    _oslomsg_notify_vhost: "{{ ironic_inspector_oslomsg_notify_vhost }}"
+    _oslomsg_notify_transport: "{{ ironic_inspector_oslomsg_notify_transport }}"
+  tags:
+    - common-mq
+    - ironic-inspector-config
+
+- include_tasks: ironic_inspector_db_setup.yml
   when: inventory_hostname == groups['ironic_inspector'][0]
   tags:
     - ironic-inspector-config
 
-- include: "ironic_inspector_init_{{ ansible_service_mgr }}.yml"
+- include_tasks: "ironic_inspector_init_{{ ansible_service_mgr }}.yml"
   tags:
     - ironic-inspector-config
 
-- include: ironic_inspector_service_setup.yml
+- include_tasks: ironic_inspector_service_setup.yml
   when: inventory_hostname == groups['ironic_inspector'][0]
   tags:
     - ironic-inspector-config
 
-- include: ironic_inspector_tftpboot_post_install.yml
+- include_tasks: ironic_inspector_tftpboot_post_install.yml
   tags:
     - ironic-inspector-config
 
-- include: ironic_inspector_httpboot_post_install.yml
+- include_tasks: ironic_inspector_httpboot_post_install.yml
   tags:
     - ironic-inspector-config
 
-- include: ironic_inspector_ipa_download.yml
+- include_tasks: ironic_inspector_ipa_download.yml
   tags:
     - ironic-inspector-ipa
 
-- include: ironic_inspector_dhcp_post_install.yml
+- include_tasks: ironic_inspector_dhcp_post_install.yml
   when: ironic_inspector_dhcp_type == "isc_dhcp"
   tags:
     - ironic-inspector-dhcp
 
-- include: ironic_inspector_dnsmasq_post_install.yml
+- include_tasks: ironic_inspector_dnsmasq_post_install.yml
   when: ironic_inspector_dhcp_type == "dnsmasq"
   tags:
     - ironic-inspector-dnsmasq
 
-- include: ironic_inspector_nginx_post_install.yml
-  when: ironic_inspector_boot_mode == "http"
-  tags:
-    - ironic-inspector-nginx
+      #- include_tasks: ironic_inspector_nginx_post_install.yml
+      #  when: ironic_inspector_boot_mode == "http"
+      #  tags:
+      #    - ironic-inspector-nginx
 

@@ -23,12 +23,12 @@ galaxy_info:
   - name: Ubuntu
     versions:
     - xenial
+    - bionic
   categories:
   - cloud
   - baremetal
   - system
 dependencies:
-  - pip_install
   - role: apt_package_pinning
     when:
       - ansible_pkg_mgr == 'apt'

@@ -44,11 +44,14 @@
       group: "root"
       config_overrides: "{{ ironic_inspector_rootwrap_conf_overrides }}"
       config_type: "ini"
-    - src: "policy.json.j2"
-      dest: "/etc/ironic-inspector/policy.json"
-      config_overrides: "{{ ironic_inspector_policy_overrides }}"
-      config_type: "json"
   notify: Restart ironic inspector services
+
+- name: Implement policy.json
+  copy:
+    content: "{{ ironic_inspector_policy_overrides | to_nice_json }}"
+    dest: "/etc/ironic-inspector/policy.json"
+  when:
+    - ironic_inspector_policy_overrides != {}
 
 - name: Copy rootwrap filters
   copy:
