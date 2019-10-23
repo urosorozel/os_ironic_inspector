@@ -1,0 +1,20 @@
+---
+
+- name: Update Ironic configuration
+  ini_file:
+    path: /etc/ironic/ironic.conf
+    section: inspector
+    option: "{{ item.option }}"
+    value: "{{ item.value }}"
+  with_items:
+    - { option: "enabled", value: "True" }
+    - { option: "username", value: "{{ ironic_inspector_service_user_name }}" }
+    - { option: "password", value: "{{ ironic_inspector_service_password }}" }
+    - { option: "project_name", value: "{{ ironic_inspector_service_project_name }}" }
+    - { option: "user_domain_name", value: "{{ ironic_inspector_service_domain_name | default('Default') }}" }
+    - { option: "project_domain_name", value: "{{ ironic_inspector_service_domain_name | default('Default') }}" }
+    - { option: "auth_url", value: "{{ keystone_service_adminuri }}" }
+    - { option: "insecure", value: "{{ keystone_service_internaluri_insecure | bool }}" }
+    - { option: "auth_type", value: "{{ ironic_inspector_keystone_auth_plugin }}" }
+    - { option: "valid_interfaces", value: "{{ ironic_inspector_valid_interfaces }}" }
+
