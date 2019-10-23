@@ -215,13 +215,13 @@ ironic_inspector_pxe_filter: dnsmasq #iptables
 ironic_inspector_report_path: report_path
 # Ironic inspector dhcp
 ironic_inspector_dhcp_pool_range: 172.23.211.200 172.23.211.254
-ironic_inspector_dhcp_subnet: 172.23.211.0
+ironic_inspector_dhcp_subnet: 172.23.208.0
 ironic_inspector_dhcp_subnet_mask: 255.255.252.0
-ironic_inspector_dhcp_gateway: 172.23.211.1
+ironic_inspector_dhcp_gateway: 172.23.208.1
 ironic_inspector_dhcp_nameservers: 1.1.1.1
 ironic_inspector_dhcp_lease_time: 600
 # Ironic inspector webfsd
-ironic_inspector_webfsd_log_dir: /var/log/webfsd
+ironic_inspector_webfsd_log_dir: /var/log/webfs
 ironic_inspector_webfsd_port: 8181
 
 ironic_inspector_dhcp_type: dnsmasq # isc_dhcp
@@ -236,8 +236,8 @@ ironic_inspector_ipa_initrd_url: https://tarballs.openstack.org/ironic-python-ag
 ironic_inspector_ipa_initrd_name: ipa_ramdisk
 ironic_inspector_ipa_initrd_sha256_url: https://tarballs.openstack.org/ironic-python-agent/tinyipa/files/tinyipa-stable-stein.gz.sha256
 
-ironic_inspector_ipa_kernel_suffix_url: "{{ ironic_inspector_webfsd_port}}{{ ironic_inspector_ipa_httpboot_image_dir }}/{{ ironic_inspector_ipa_kernel_name }}"
-ironic_inspector_ipa_initrd_suffix_url: "{{ ironic_inspector_webfsd_port}}{{ ironic_inspector_ipa_httpboot_image_dir }}/{{ ironic_inspector_ipa_initrd_name}}"
+ironic_inspector_ipa_kernel_suffix_url: "{{ ironic_inspector_webfsd_port}}/{{ ironic_inspector_ipa_kernel_name }}"
+ironic_inspector_ipa_initrd_suffix_url: "{{ ironic_inspector_webfsd_port}}/{{ ironic_inspector_ipa_initrd_name}}"
 # This variable is used by the repo_build process to determine
 # which host group to check for members of before building the
 # pip packages required by this role. The value is picked up

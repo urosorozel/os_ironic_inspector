@@ -17,8 +17,8 @@
   file:
     path: "{{ item }}"
     state: directory
-    owner: "{{ ironic_inspector_system_user_name }}"
-    group: "{{ ironic_inspector_system_group_name }}"
+    owner: "www-data"
+    group: "www-data"
     mode: "0755"
   with_items:
     - /httpboot
