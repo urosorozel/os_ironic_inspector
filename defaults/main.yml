@@ -221,7 +221,7 @@ ironic_inspector_dhcp_gateway: 172.23.211.1
 ironic_inspector_dhcp_nameservers: 1.1.1.1
 ironic_inspector_dhcp_lease_time: 600
 # Ironic inspector webfsd
-ironic_inspector_webfsd_log_dir: /var/log/webfsd
+ironic_inspector_webfsd_log_dir: /var/log/webfs
 ironic_inspector_webfsd_port: 8181
 
 ironic_inspector_dhcp_type: dnsmasq # isc_dhcp
