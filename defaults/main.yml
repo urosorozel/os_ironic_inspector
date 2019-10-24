@@ -72,9 +72,6 @@ ironic_inspector_oslomsg_amqp1_enabled: "{{ ironic_inspector_oslomsg_rpc_transpo
 ironic_inspector_optional_oslomsg_amqp1_pip_packages:
   - oslo.messaging[amqp1]
 
-# Auth
-ironic_inspector_service_user_name: "ironic-inspector"
-
 # WSGI settings
 ironic_inspector_wsgi_threads: 1
 ironic_inspector_wsgi_processes_max: 16
