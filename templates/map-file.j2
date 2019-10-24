@@ -1,0 +1,4 @@
+re ^(/{{ ironic_inspector_tftpboot_dir }}/) /{{ ironic_inspector_tftpboot_dir }}/\2
+re ^/{{ ironic_inspector_tftpboot_dir }}/ /{{ ironic_inspector_tftpboot_dir }}/
+re ^(^/) /{{ ironic_inspector_tftpboot_dir }}/\1
+re ^([^/]) /{{ ironic_inspector_tftpboot_dir }}/\1
