@@ -21,22 +21,23 @@
     group: "{{ ironic_inspector_system_group_name }}"
     mode: "0755"
   with_items:
-    - /tftpboot
-    - /tftpboot/pxelinux.cfg
+    - "{{ ironic_inspector_tftpboot_dir }}"
+    - "{{ ironic_inspector_tftpboot_dir }}/pxelinux.cfg"
+    - "{{ ironic_inspector_ipa_tftpboot_image_dir }}"
 
 - name: Default pxelinux.0 config
   template:
     src: pxelinux-default.j2
-    dest: /tftpboot/pxelinux.cfg/default
+    dest: "{{ ironic_inspector_tftpboot_dir }}/pxelinux.cfg/default"
 
 - name: Copy in tftpd-hpa map file
-  copy:
-    src: "map-file"
-    dest: "/tftpboot/map-file"
+  template:
+    src: "map-file.j2"
+    dest: "{{ ironic_inspector_tftpboot_dir }}/map-file"
 
 - name: Copy library modules into /tftpboot
   copy:
     src: "{{ item }}"
-    dest: "/tftpboot/"
+    dest: "{{ ironic_inspector_tftpboot_dir }}"
     remote_src: True
   with_items: "{{ ironic_inspector_library_modules_paths }}"
