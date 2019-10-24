@@ -28,9 +28,6 @@
   tags:
     - ironic-inspector-install
 
-- debug: var=ironic_inspector_git_constraints
-- debug: var=ironic_inspector_bin
-
 - name: Install the python venv
   import_role:
     name: "python_venv_build"
