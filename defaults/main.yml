@@ -72,9 +72,6 @@ ironic_inspector_oslomsg_amqp1_enabled: "{{ ironic_inspector_oslomsg_rpc_transpo
 ironic_inspector_optional_oslomsg_amqp1_pip_packages:
   - oslo.messaging[amqp1]
 
-# Auth
-ironic_inspector_service_user_name: "ironic-inspector"
-
 # WSGI settings
 ironic_inspector_wsgi_threads: 1
 ironic_inspector_wsgi_processes_max: 16
@@ -222,7 +219,7 @@ ironic_inspector_dhcp_nameservers: 1.1.1.1
 ironic_inspector_dhcp_lease_time: 600
 # Ironic inspector webfsd
 ironic_inspector_webfsd_log_dir: /var/log/webfs
-ironic_inspector_webfsd_port: 8181
+ironic_inspector_webfsd_port: 8282
 
 ironic_inspector_dhcp_type: dnsmasq # isc_dhcp
 ironic_inspector_boot_mode: http # tftp

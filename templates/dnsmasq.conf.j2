@@ -6,6 +6,13 @@ enable-tftp
 tftp-root={{ ironic_inspector_tftpboot_dir }}
 dhcp-option=3,{{ ironic_inspector_dhcp_gateway }}
 dhcp-option=6,{{ ironic_inspector_dhcp_nameservers }}
+# Ignore all hosts without vendor class ironic-inspector
+# this prevens handing out leases to non pxe devices
+# IPA ramdisk dhcp client has to send the same vendor class
+dhcp-ignore=tag:!ironic-inspctor
+dhcp-match=set:ironic-inspector,60,PXEClient
+# Tag ipa ramdisk
+dhcp-match=set:ironic-inspector,60,ironic-inspector
 dhcp-sequential-ip
 dhcp-match=ipxe,175
 dhcp-match=set:efi,option:client-arch,7
