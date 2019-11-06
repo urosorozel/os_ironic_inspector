@@ -36,5 +36,4 @@
     src: "{{ item }}"
     dest: "{{ ironic_inspector_httpboot_dir }}"
     remote_src: True
-  with_items: "{{ ironic_httpboot_library_modules_paths }}"
-  when: ironic_httpboot_enabled
+  with_items: "{{ ironic_inspector_httpboot_library_modules_paths }}"

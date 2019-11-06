@@ -1,3 +1,4 @@
+# Disable listening for DNS
 port=0
 interface={{ ironic_inspector_dhcp_interface }}
 bind-interfaces
@@ -20,10 +21,7 @@ dhcp-match=set:efi,option:client-arch,11
 dhcp-boot=tag:efi,tag:!ipxe,ipxe.efi
 
 # Client is running PXE over BIOS; send BIOS version of iPXE chainloader
-dhcp-boot=/undionly.kpxe,IRONIC_IP
-
-# Disable listening for DNS
-port=0
+dhcp-boot=/undionly.kpxe,{{ hostvars[inventory_hostname]['ansible_' + ironic_inspector_dhcp_interface|replace("-","_")]['ipv4']['address'] }}:{{ ironic_inspector_webfsd_port }}
 
 # Disable default router(s) and DNS over provisioning network
 #dhcp-option=3

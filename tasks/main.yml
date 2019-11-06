@@ -91,6 +91,7 @@
     - ironic-inspector-config
 
 - include_tasks: ironic_inspector_httpboot_post_install.yml
+  when: ironic_inspector_boot_mode == "http"
   tags:
     - ironic-inspector-config
 
