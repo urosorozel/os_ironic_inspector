@@ -34,6 +34,6 @@
 - name: Copy library modules into "{{ ironic_inspector_httpboot_image_dir }}"
   copy:
     src: "{{ item }}"
-    dest: "{{ ironic_inspector_httpboot_dir }}"
+    dest: "{{ ironic_inspector_tftpboot_dir }}"
     remote_src: True
   with_items: "{{ ironic_inspector_httpboot_library_modules_paths }}"
