@@ -15,11 +15,25 @@
 
 - name: Create /httpboot directories
   file:
-    path: "{{ item }}"
+    path: "{{ ironic_inspector_httpboot_dir }}"
     state: directory
     owner: "ironic"
     group: "ironic"
     mode: "0755"
-  with_items:
-    - /httpboot
 
+- name: Default inspector.ipxe
+  template:
+    src: inspector.ipxe.j2
+    dest: "{{ ironic_inspector_httpboot_dir }}/inspector.ipxe"
+
+- name: Copy in dualboot.ipxe
+  copy:
+    src: "dualboot.ipxe"
+    dest: "{{ ironic_inspector_httpboot_dir }}/dualboot.ipxe"
+
+- name: Copy library modules into "{{ ironic_inspector_httpboot_image_dir }}"
+  copy:
+    src: "{{ item }}"
+    dest: "{{ ironic_inspector_tftpboot_dir }}"
+    remote_src: True
+  with_items: "{{ ironic_inspector_httpboot_library_modules_paths }}"

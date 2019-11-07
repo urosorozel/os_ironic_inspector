@@ -1,0 +1,9 @@
+#!ipxe
+
+:retry_boot
+echo In inspector.ipxe
+imgfree
+# NOTE(dtantsur): keep inspection kernel params in [mdns]params in ironic-inspector-image
+kernel --timeout 60000 http://{{ hostvars[inventory_hostname]['ansible_' + ironic_inspector_dhcp_interface|replace("-","_")]['ipv4']['address'] }}:{{ ironic_inspector_webfsd_port }}/{{ ironic_inspector_ipa_kernel_name }} ipa-inspection-callback-url=http://{{ external_lb_vip_address }}:5050/v1/continue {{ ironic_inspector_pxe_append_params }} initrd={{ ironic_inspector_ipa_initrd_name }} || goto retry_boot
+initrd --timeout 60000 http://{{ hostvars[inventory_hostname]['ansible_' + ironic_inspector_dhcp_interface|replace("-","_")]['ipv4']['address'] }}:{{ ironic_inspector_webfsd_port }}/{{ ironic_inspector_ipa_initrd_name }} --name {{ ironic_inspector_ipa_initrd_name }} || goto retry_boot
+boot

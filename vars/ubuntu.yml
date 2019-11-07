@@ -49,3 +49,7 @@ ironic_inspector_library_modules_paths:
   - "/usr/lib/syslinux/modules/bios/ldlinux.c32"
   - "/usr/lib/SYSLINUX.EFI/efi64/syslinux.efi"
   - "/usr/lib/syslinux/modules/efi64/ldlinux.e64"
+
+ironic_inspector_httpboot_library_modules_paths:
+  - "/usr/lib/ipxe/undionly.kpxe"
+  - "/usr/lib/ipxe/ipxe.efi"
