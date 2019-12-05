@@ -31,10 +31,11 @@
     src: "dualboot.ipxe"
     dest: "{{ ironic_inspector_httpboot_dir }}/dualboot.ipxe"
 
-- name: Copy library modules into "{{ ironic_inspector_httpboot_image_dir }}"
+
+- name: Copy library modules into "{{ ironic_inspector_httpboot_dir }}"
   copy:
     src: "{{ item }}"
     dest: "{{ ironic_inspector_httpboot_dir }}"
     remote_src: True
-  with_items: "{{ ironic_httpboot_library_modules_paths }}"
-  when: ironic_httpboot_enabled
+  with_items: "{{ ironic_inspector_httpboot_library_modules_paths }}"
+  when: ironic_inspector_boot_mode is "http"

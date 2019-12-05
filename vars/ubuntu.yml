@@ -30,6 +30,7 @@ ironic_inspector_distro_packages:
   - python-yaml
   - ipmitool
 ironic_inspector_http_distro_packages:
+  - ipxe
   - webfs
 
 ironic_inspector_isc_dhcp_distro_packages:
